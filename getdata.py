@@ -1,23 +1,44 @@
 import os
 import numpy as np
+import h5py
+
+def load_params(par):
+    "load simulation parameters from file 'params.txt' or 'Params.txt'"
+    try:
+        p = open(par, 'r')
+        params = p.read()
+        params = params.split()
+        
+        radius = int(params[0])
+        gdims_x = int(params[1])
+        gdims_z = int(params[2])
+        dt = float(params[3])
+        dx = float(params[4])
+        print dt,dx,radius,gdims_x,gdims_z
+        return [radius,dt,dx,gdims_x,gdims_z]
+    except:
+        print "parameter file invalid"
 
 
-def get_arr(t,n,typ):
+def get_arr(t,n,typ,pfad):
         "loads array from particles-h5 file"
         try:
-                name = 'particles.t' + str(t).zfill(6) + '_n00' + str(n).zfill(4) + '.h5'
-                f = h5py.File(name)
-                #f = h5py.File('Part-Data/' + name)
-                arr = []
-                for key in f:
-                    for i in range(0,len(typ)):
-                        if (key[i]==typ[i]):
-                            valid = True
-                        else:
-                            valid = False
-                        if valid:
-                            arr = np.concatenate((arr,np.array(f[key])))
-                            return arr
+            print pfad
+            name = 'particles.t' + str(t).zfill(6) + '_n00' + str(n).zfill(4) + '.h5'
+            print 'loading '+pfad+'/'+name
+
+            f = h5py.File(pfad+'/'+name)
+        
+            arr = []
+            for key in f:
+                for i in range(0,len(typ)):
+                    if (key[i]==typ[i]):
+                        valid = True
+                    else:
+                        valid = False
+                    if valid:
+                        arr = np.concatenate((arr,np.array(f[key])))
+                        return arr
         except: print "failed loading particle data t= "+str(t)
 
 
@@ -85,18 +106,19 @@ def patch_concat(get_x,n):
         mat = np.vstack((mat,arr))
     return mat
 
-if __name__ == "__main_-":
+if __name__ == "__main__":
         print "testing:\n"
-        if  os.path.isfile(params.txt) : 
-            par = 'params.txt'
+        pfad = raw_input('Pfad zum Output-Ornder?')
+        if  os.path.isfile(pfad+'/params.txt') :
+            par = pfad+'/params.txt'
             print par
             load_params(par)
-        elif os.path.isfile(Params.txt) : 
-            par = 'Params.txt'
+        elif os.path.isfile(pfad+'/Params.txt') :
+            par = pfad+'/Params.txt'
             print par
             load_params(par)
         else: print "no parameter file found"
         try:
-            get_arr(1000,0,px)
+            print get_arr(1000,0,'px',pfad)
         except:
-            print "could not load particles.t010000"
+            print "could not load particles.t001000"

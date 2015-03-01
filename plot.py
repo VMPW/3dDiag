@@ -18,7 +18,7 @@ try:
     dt = float(params[3])
     dx = float(params[4])
     print dt,dx,radius,gdims_x,gdims_z
-    return [radius,dt,dx,gdims_x,gdims_z]
+
 except:
     print "parameter file invalid"
 
@@ -29,6 +29,9 @@ e = 1.602176565e-19
 me = 9.10939e-31
 
 namestr = raw_input('Unter welchem Namen Speichern?')
+size = [gdims_x+1,gdims_z+1]
+np = raw_input('largest patch number?')
+t = int(raw_input('which timestep?'))
 
 plt.imshow(cut(proton.Ehigh,cx,cz))
 plt.savefig(namestr+'yslice'+str(t)+'.png')
