@@ -6,16 +6,20 @@ def load_params(par):
     "load simulation parameters from file 'params.txt' or 'Params.txt'"
     try:
         p = open(par, 'r')
+        print 'opened '+par
         params = p.read()
         params = params.split()
         
         radius = int(params[0])
         gdims_x = int(params[1])
-        gdims_z = int(params[2])
-        dt = float(params[3])
-        dx = float(params[4])
+        gdims_y = int(params[2])
+        gdims_z = int(params[3])
+        dt = float(params[4])
+        dx = float(params[5])
+        np = int(params[6])
         print dt,dx,radius,gdims_x,gdims_z
-        return [radius,dt,dx,gdims_x,gdims_z]
+        p.close()
+        return [radius,gdims_x,gdims_y,gdims_z,dt,dx,np]
     except:
         print "parameter file invalid"
 
@@ -23,9 +27,8 @@ def load_params(par):
 def get_arr(t,n,typ,pfad):
         "loads array from particles-h5 file"
         try:
-            print pfad
             name = 'particles.t' + str(t).zfill(6) + '_n00' + str(n).zfill(4) + '.h5'
-            print 'loading '+pfad+'/'+name
+            print 'loading '+typ+' from '+pfad+'/'+name
 
             f = h5py.File(pfad+'/'+name)
         
@@ -36,17 +39,17 @@ def get_arr(t,n,typ,pfad):
                         valid = True
                     else:
                         valid = False
-                    if valid:
-                        arr = np.concatenate((arr,np.array(f[key])))
-                        return arr
+                if valid:
+                    arr = np.concatenate((arr,np.array(f[key])))
+                    return arr
         except: print "failed loading particle data t= "+str(t)
 
 
-def get_ex(t,n,p):
+def get_ex(t,n,pfad):
     "extracts e-field x-component at time t from node n, patch p from pfd-h5 file"
     name = 'pfd.t0' + str(t).zfill(5) + '_n00' + str(n).zfill(4) + '.h5'
-    #print name
-    f = h5py.File(name)
+    print 'loading '+pfad+'/'+name
+    f = h5py.File(pfad+'/'+name)
     # f = h5py.File('Field-Data/' + name)
     for key in f:
         g = f[key]
@@ -55,11 +58,11 @@ def get_ex(t,n,p):
             mat = np.array(g['ex/p'+str(p)+'/3d'])
     return mat.reshape(mat.shape[0],mat.shape[2])
 
-def get_ez(t,n,p):
+def get_ez(t,n,p,pfad):
     "extracts e-field z-component at time t from node n, patch p from pfd-h5 file"
     name = 'pfd.t0' + str(t).zfill(5) + '_n00' + str(n).zfill(4) + '.h5'
-    #print name
-    f = h5py.File(name)
+    print 'loading '+pfad+'/'+name
+    f = h5py.File(pfad+'/'+name)
     # f = h5py.File('Field-Data/' + name)
     for key in f:
         g = f[key]
@@ -68,7 +71,8 @@ def get_ez(t,n,p):
             mat = np.array(g['ez/p'+str(p)+'/3d'])
     return mat.reshape(mat.shape[0],mat.shape[2])
 
-get_en = lambda px,py,pz: (np.sqrt(px*px + py*py + pz*pz +1) - 1)*mp*c*c/e
+def get_en(px,py,pz,mp,c,e):
+    return (np.sqrt(px*px + py*py + pz*pz +1) - 1)*mp*c*c/e
 "computes kin. energy from momenta"
 
 def get_phi_pz(px,pz):
@@ -94,7 +98,7 @@ def patch_concat(get_x,n):
     "stitch patches back together"
     mat = np.zeros((1,gdims_z/2 + 1))
     # print mat.shape
-    for i in range (0,np_x):
+    for i in range(0,np_x):
         arr = np.zeros((gdims_x/(np_x),1))
         #    print arr.shape
         for j in range(0,np_z):
