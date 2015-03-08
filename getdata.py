@@ -16,10 +16,10 @@ def load_params(par):
         gdims_z = int(params[3])
         dt = float(params[4])
         dx = float(params[5])
-        np = int(params[6])
-        print dt,dx,radius,gdims_x,gdims_z
+        npatch = int(params[6])
+        print radius,gdims_x,gdims_z,dt,dx,npatch
         p.close()
-        return [radius,gdims_x,gdims_y,gdims_z,dt,dx,np]
+        return [radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch]
     except:
         print "parameter file invalid"
 
@@ -110,8 +110,23 @@ def patch_concat(get_x,n):
         mat = np.vstack((mat,arr))
     return mat
 
+def get_asc(t,n,pfad):
+    "extracts particles at time t from node n from .asc file"
+    "arr = x,y,z,px,py,pz,q (N,7)"
+    name = 'prt.t' + str(t).zfill(6) + '_n00' + str(n).zfill(4) + '.asc'
+    arr = []
+    try:
+        arr=np.genfromtxt(pfad+'/'+name)[:,1:8]
+    except:
+        print name, ' empty or none existent'
+        arr = np.zeros((1,7))
+    print name, 'loaded as',arr.shape
+    return arr
+
+
+
 if __name__ == "__main__":
-        print "testing:\n"
+        print "\ntesting:"
         pfad = raw_input('Pfad zum Output-Ornder?')
         if  os.path.isfile(pfad+'/params.txt') :
             par = pfad+'/params.txt'
@@ -123,6 +138,6 @@ if __name__ == "__main__":
             load_params(par)
         else: print "no parameter file found"
         try:
-            print get_arr(1000,0,'px',pfad)
+            print get_asc(50,0,pfad)
         except:
             print "could not load particles.t001000"
