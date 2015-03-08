@@ -1,0 +1,11 @@
+# produced plots
+
+*.png
+
+# python bynaries
+
+*.pyc
+
+# xcode project files
+
+*.xcodeproj
