@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import h5py
+from const import *
 
 def load_params(par):
     "load simulation parameters from file 'params.txt' or 'Params.txt'"
@@ -41,6 +42,7 @@ def get_arr(t,n,typ,pfad):
                         valid = False
                 if valid:
                     arr = np.concatenate((arr,np.array(f[key])))
+                    print arr
                     return arr
         except: print "failed loading particle data t= "+str(t)
 
@@ -71,9 +73,6 @@ def get_ez(t,n,p,pfad):
             mat = np.array(g['ez/p'+str(p)+'/3d'])
     return mat.reshape(mat.shape[0],mat.shape[2])
 
-def get_en(px,py,pz,mp,c,e):
-    return (np.sqrt(px*px + py*py + pz*pz +1) - 1)*mp*c*c/e
-"computes kin. energy from momenta"
 
 def get_phi_pz(px,pz):
     phi = np.arctan(px/pz)
@@ -126,7 +125,7 @@ def get_asc(t,n,pfad):
 
 
 if __name__ == "__main__":
-        print "\ntesting:"
+        print "\n testing:"
         pfad = raw_input('Pfad zum Output-Ornder?')
         if  os.path.isfile(pfad+'/params.txt') :
             par = pfad+'/params.txt'
