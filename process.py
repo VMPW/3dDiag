@@ -59,10 +59,10 @@ def get_detec(arr,m):
     for i in range(0,arr.shape[1]):
         #print arr[3,i],arr[4,i],arr[5,i]
         #print i
-        if arr[6,i] > 3000000:
+        if arr[6,i] > 5000000:
             ang = get_angle(arr[3,i],arr[4,i],arr[5,i])
             #print ang
-            if (math.fabs(ang))<20.:
-                detec[int(get_anglexy(arr[3,i],arr[5,i]))+20,int(get_anglexy(arr[4,i],arr[5,i]))+20]+=arr[6,i]
+            if (math.fabs(ang))<20. and detec[int(get_anglexy(arr[3,i],arr[5,i]))+20,int(get_anglexy(arr[4,i],arr[5,i]))+20]<arr[6,i]:
+                detec[int(get_anglexy(arr[3,i],arr[5,i]))+20,int(get_anglexy(arr[4,i],arr[5,i]))+20]=arr[6,i]
     print detec
     return detec

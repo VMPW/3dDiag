@@ -6,10 +6,23 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		E101C9F41A9CB1DD0001ED3C /* getdata.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = getdata.py; sourceTree = "<group>"; usesTabs = 0; };
+		E101C9F51A9CB4E20001ED3C /* plot.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = plot.py; sourceTree = "<group>"; };
+		E101C9F61A9CB4F30001ED3C /* process.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = process.py; sourceTree = "<group>"; };
+		E101C9F71A9CC78B0001ED3C /* part.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = part.py; sourceTree = "<group>"; };
+		E11F6B6B1AAEFA4800E35090 /* const.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = const.py; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		E101C9E91A9CAC910001ED3C = {
 			isa = PBXGroup;
 			children = (
+				E101C9F41A9CB1DD0001ED3C /* getdata.py */,
+				E101C9F71A9CC78B0001ED3C /* part.py */,
+				E101C9F61A9CB4F30001ED3C /* process.py */,
+				E101C9F51A9CB4E20001ED3C /* plot.py */,
+				E11F6B6B1AAEFA4800E35090 /* const.py */,
 			);
 			sourceTree = "<group>";
 		};
@@ -174,6 +187,7 @@
 				E101C9F31A9CAC920001ED3C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -173,22 +173,22 @@ print proton
 print electron
 
 
-up=(dx*gdims_x/2.)+1.
-low=(dx*gdims_x/2.)-1.
+up=(dx*gdims_x/2.)+dx
+low=(dx*gdims_x/2.)-dx
 print up
 print low
-"""
-plt.suptitle('ions\n  '+str(np.around(Qtot,3))+'\n pulse maximum hits target in ' + str(106-(t*dt*1e15)) +'fs')
+
+plt.suptitle('ions\n  Qges='+str(np.around(Qtot,3))+' e \n pulse maximum hits target in ' + str(106-(t*dt*1e15)) +'fs')
 plt.subplot(2,2,1)
 plt.imshow(np.log10(get_slice(1,carbon,gdims_y,gdims_z,dx,up,low)))
 plt.xlabel('z')
 plt.ylabel('y')
 plt.title('s-polarisation, carbon density')
 plt.colorbar(orientation=u'horizontal')
-plt.savefig(namestr+'hist'+str(t)+'.png')
+#plt.savefig('Images/'+namestr+'hist'+str(t)+'.png')
 
 plt.subplot(2,2,2)
-plt.imshow(np.transpose(get_detec(proton,mp)),extent=[-20,20,-20,20])
+plt.imshow(np.transpose(get_detec(proton,mp)),extent=[-20,20,-20,20],interpolation='none',cmap=plt.get_cmap("OrRd"))
 plt.xlabel('x')
 plt.ylabel('y')
 #plt.savefig(namestr+'detec'+str(t)+'.png')
@@ -207,20 +207,21 @@ plt.xlabel('z')
 plt.ylabel('y')
 plt.title('s-polarisation, protons total energy')
 plt.colorbar(orientation=u'horizontal')
-plt.savefig(namestr+'-Vierer-prot-'+str(t)+'.png')
+plt.savefig('Images/'+namestr+'-Vierer-prot-'+str(t)+'.png')
 plt.show()
-"""
-plt.suptitle('electrons \n  '+str(np.around(Qtot,3))+'\n pulse maximum hits target in ' + str(106-(t*dt*1e15)) +'fs')
+
+plt.suptitle('electrons \n   Qges= '+str(np.around(Qtot,3))+'e \n pulse maximum hits target in ' + str(52-(t*dt*1e15)) +'fs')
 plt.subplot(2,2,1)
-plt.imshow(np.subtract(np.log10(np.add(17881.*get_slice(1,proton,gdims_y,gdims_z,dx,up,low),17881*6.*get_slice(1,carbon,gdims_y,gdims_z,dx,up,low))),np.log10(17881.*get_slice(1,electron,gdims_y,gdims_z,dx,up,low))),cmap=plt.get_cmap("bwr"), vmin=-1,vmax=1)
+plt.imshow(np.subtract(np.nan_to_num(np.log10(np.add(286.*get_slice(1,proton,gdims_y,gdims_z,dx,up,low),286*6.*get_slice(1,carbon,gdims_y,gdims_z,dx,up,low)))),np.nan_to_num(np.log10(286.*get_slice(1,electron,gdims_y,gdims_z,dx,up,low)))),cmap=plt.get_cmap("bwr"), vmin=-5,vmax=5, interpolation='bicubic')
 plt.xlabel('z')
 plt.ylabel('y')
 plt.colorbar(orientation=u'horizontal')
 plt.title('charge distribution')
-plt.savefig(namestr+'charge'+str(t)+'.png')
-"""
+#plt.savefig('Images/'+namestr+'charge'+str(t)+'.png')
+
+
 plt.subplot(2,2,2)
-plt.imshow(np.transpose(get_detec(electron,me)),extent=[-20,20,-20,20])
+plt.imshow(np.transpose(get_detec(electron,me)),extent=[-20,20,-20,20],interpolation='none',cmap=plt.get_cmap("OrRd"))
 plt.xlabel('x')
 plt.ylabel('y')
 #plt.savefig(namestr+'detec'+str(t)+'.png')
@@ -239,10 +240,10 @@ plt.xlabel('z')
 plt.ylabel('y')
 plt.title('s-polarisation')
 plt.colorbar(orientation=u'horizontal')
-plt.savefig(namestr+'-Vierer-el-'+str(t)+'.png')
+plt.savefig('Images/'+namestr+'-Vierer-el-'+str(t)+'.png')
 plt.show()
 
-plt.suptitle('Energy histograms\n  '+str(np.around(Qtot,3))+'\n pulse maximum hits target in ' + str(106-(t*dt*1e15)) +'fs')
+plt.suptitle('Energy histograms\n \n pulse maximum hits target in ' + str(52-(t*dt*1e15)) +'fs')
 plt.subplot(2,2,1)
 plt.hist(get_sliceravel(0,proton,up,low),bins=50,log=True,normed=False)
 plt.title('protons p-pol')
@@ -260,5 +261,5 @@ plt.title('protons all')
 plt.subplot(2,2,4)
 plt.hist(electron[6,:],bins=50,log=True,normed=False)
 plt.title('electrons')
-plt.savefig(namestr+'-hists'+str(t)+'.png')
-plt.show()"""
+plt.savefig('Images/'+namestr+'-hists'+str(t)+'.png')
+plt.show()
