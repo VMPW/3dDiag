@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import h5py
-from const import *
+from conv import *
 
 def load_params(par):
     "load simulation parameters from file 'params.txt' or 'Params.txt'"
@@ -18,9 +18,41 @@ def load_params(par):
         dt = float(params[4])
         dx = float(params[5])
         npatch = int(params[6])
-        print radius,gdims_x,gdims_z,dt,dx,npatch
+        try:
+            dxphys = float(params[7])
+        except:
+            print 'no dxphys in parameter file'
+            print radius,gdims_x,gdims_z,dt,dx,npatch
+            p.close()
+            return [radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch]
         p.close()
-        return [radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch]
+        return [radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch,dphys]
+    except:
+        print "parameter file invalid"
+
+def load_params2d(par):
+    "load simulation parameters from file 'params.txt' or 'Params.txt'"
+    try:
+        p = open(par, 'r')
+        print 'opened '+par
+        params = p.read()
+        params = params.split()
+        print params
+        radius = float(params[0])
+        gdims_x = int(params[1])
+        gdims_z = int(params[2])
+        dt = float(params[3])
+        dx = float(params[4])
+        npatch = int(params[5])
+            #try:
+            #dxphys = float(params[6])
+            #except:
+            #print 'no dxphys in parameter file'
+            #print radius,gdims_x,gdims_z,dt,dx,npatch
+            #p.close()
+            #return [radius,gdims_x,gdims_z,dt,dx,npatch]
+        p.close()
+        return [radius,gdims_x,gdims_z,dt,dx,npatch]
     except:
         print "parameter file invalid"
 
@@ -43,7 +75,7 @@ def get_arr(t,n,typ,pfad):
                 if valid:
                     arr = np.concatenate((arr,np.array(f[key])))
                     print arr
-                    return arr
+            return arr
         except: print "failed loading particle data t= "+str(t)
 
 
