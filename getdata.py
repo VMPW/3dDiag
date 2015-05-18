@@ -61,7 +61,7 @@ def get_arr(t,n,typ,pfad):
         "loads array from particles-h5 file"
         try:
             name = 'particles.t' + str(t).zfill(6) + '_n00' + str(n).zfill(4) + '.h5'
-            print 'loading '+typ+' from '+pfad+'/'+name
+            #print 'loading '+typ+' from '+pfad+'/'+name
 
             f = h5py.File(pfad+'/'+name)
         
@@ -82,7 +82,7 @@ def get_arr(t,n,typ,pfad):
 def get_ex(t,n,pfad):
     "extracts e-field x-component at time t from node n, patch p from pfd-h5 file"
     name = 'pfd.t0' + str(t).zfill(5) + '_n00' + str(n).zfill(4) + '.h5'
-    print 'loading '+pfad+'/'+name
+    #print 'loading '+pfad+'/'+name
     f = h5py.File(pfad+'/'+name)
     # f = h5py.File('Field-Data/' + name)
     for key in f:
@@ -95,7 +95,7 @@ def get_ex(t,n,pfad):
 def get_ez(t,n,p,pfad):
     "extracts e-field z-component at time t from node n, patch p from pfd-h5 file"
     name = 'pfd.t0' + str(t).zfill(5) + '_n00' + str(n).zfill(4) + '.h5'
-    print 'loading '+pfad+'/'+name
+    #print 'loading '+pfad+'/'+name
     f = h5py.File(pfad+'/'+name)
     # f = h5py.File('Field-Data/' + name)
     for key in f:

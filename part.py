@@ -26,7 +26,7 @@ class Data():
         self.N[p[0],p[1]]+=1
         self.Px[p[0],p[1]] +=p[2]
         self.Pz[p[0],p[1]] +=p[4]
-        Ekin = (np.sqrt(p[2]*p[2] + p[3]*p[3] + p[4]*p[4] +1) - 1)*mp*c*c/e
+        Ekin = (np.sqrt(p[2]*p[2] + p[3]*p[3] + p[4]*p[4] +1) - 1)*self.m*c*c/e
         self.E[p[0],p[1]] +=Ekin
         if self.Emax[p[0],p[1]]<Ekin: self.Emax[p[0],p[1]]=Ekin
         if (p[0]<center[0]+30) and (p[0]>center[0]-30):
@@ -35,7 +35,7 @@ class Data():
         return Ekin
     
     def ang_sort(self,p,Ekin): # p = posx,posz,px,py,pz
-        #Ekin = (np.sqrt(p[2]*p[2] + p[3]*p[3] + p[4]*p[4] +1) - 1)*mp*c*c/e
+        #Ekin = (np.sqrt(p[2]*p[2] + p[3]*p[3] + p[4]*p[4] +1) - 1)*self.m*c*c/e
         self.ekin+=[Ekin]
         self.pz+=[p[4]]
         ang=math.atan(p[2]/p[4])*180/math.pi
@@ -52,8 +52,9 @@ class Data():
         uz=center[0]+R/2.
         temp = np.average(self.E)
         hottemp = np.nan_to_num(np.average(self.E[self.E>hot]))
+        ulthottemp = np.nan_to_num(np.average(self.E[self.E>1e7]))
         Q = np.sum(self.N)*self.q
         print Q
         Qin=np.sum(self.N[lx:ux,lz:uz])*self.q
-        return [Q,Qin,temp,hottemp]
+        return [Q,Qin,temp,hottemp,ulthottemp]
 

@@ -30,7 +30,9 @@ dx = float(params[4])
 dxphys = float(params[5])*1e6
 """
 t=int(sys.argv[1])
-pfad = raw_input('Pfad zum Output-Ordner?')
+#pfad = raw_input('Pfad zum Output-Ordner?')
+pfad = sys.argv[2]
+
 if  os.path.isfile(pfad+'/params.txt') :
     par = pfad+'/params.txt'
     print par
@@ -48,7 +50,7 @@ center=(512,1024)
 size = [gdims_x+1,gdims_z+1]
 
 zline=np.linspace(0,gdims_z,gdims_z+1)*dxphys*1e6
-print size,zline,len(zline)
+#print size,zline,len(zline)
 
 get_en = lambda px,py,pz: (np.sqrt(px*px + py*py + pz*pz +1) - 1)*mp*c*c/e
 "computes kin. energy from momenta"
@@ -89,7 +91,7 @@ carbon = part.Data("carbon",2,conv.mc,6.,size)
 
 Qin=0.
 Qout=0.
-phase=[]
+phase=[(0,0)]
 
 #sorting
 for i in range(0,kindarr.size):
@@ -127,24 +129,29 @@ for i in range(0,kindarr.size):
 #phasein = np.transpose(phas1)
 stop = timeit.default_timer()
 #print histp
-print stop - start
+phase=zip(*phase)
+
+#print phase
+print 'processing time:',stop - start
 
 plt.suptitle('pulse maximum hits target in ' + str(220-(t*dt*1e15)) +'fs')
 #****************************************************
 plt.subplot(3,2,1)
-plt.imshow(np.log10(proton.Emax),extent=[0,size[1]*dxphys*1e6,0,size[0]*dxphys*1e6],interpolation='bicubic')
+plt.imshow(proton.Emax,extent=[0,size[1]*dxphys*1e6,0,size[0]*dxphys*1e6],interpolation='bicubic')
 plt.title("proton energy")
 plt.ylabel("x")
 plt.xlabel("z")
-plt.xlim([10,40])
+plt.xlim([5,40])
+#plt.ylim([2,14])
 plt.colorbar(orientation=u'vertical')
 #****************************************************
 plt.subplot(3,2,3)
 plt.title("particle distribution")
-plt.imshow(electron.N*(-1.)+carbon.N*(6.)+proton.N,cmap=plt.get_cmap('seismic'),extent=[0,size[1]*dxphys*1e6,0,size[0]*dxphys*1e6],vmin=-1., vmax=1.,interpolation='bicubic')
+plt.imshow(electron.N*(-1.)+carbon.N*(6.)+proton.N,cmap=plt.get_cmap('bwr'),extent=[0,size[1]*dxphys*1e6,0,size[0]*dxphys*1e6],vmin=-2., vmax=2.,interpolation='bicubic')
 plt.ylabel("x")
 plt.xlabel("z")
-plt.xlim([10,40])
+plt.xlim([5,40])
+#plt.ylim([2,14])
 plt.colorbar(orientation=u'vertical')
 #****************************************************
 plt.subplot(3,2,5)
@@ -197,11 +204,11 @@ plt.ylabel("n")
 
 
 plt.savefig('Images/CD2D/CD2D-'+str(t)+'r='+str(radius)+'.png')
-plt.show()
+#plt.show()
 
-C=carbon.process(1e6,(radius+1.)*1e-6/dxphys,center,size)
-E=electron.process(1e6,(radius+1.)*1e-6/dxphys,center,size)
-P=proton.process(1e6,(radius+1.)*1e-6/dxphys,center,size)
+C=carbon.process(1e6,(radius+3.)*1e-6/dxphys,center,size)
+E=electron.process(1e6,(radius+3.)*1e-6/dxphys,center,size)
+P=proton.process(1e6,(radius+3.)*1e-6/dxphys,center,size)
 
 print C,E,P
 
@@ -214,15 +221,29 @@ tempe=E[2]
 hotc=C[3]
 hotp=P[3]
 hote=E[3]
+uhotc=C[4]
+uhotp=P[4]
+uhote=E[4]
 
 Qstring = str(t*dt*1e15)+' '+str(Q)+' '+str(Qin)+'\n'
 
-Estring = str(t*dt*1e15)+' '+str(tempe)+' '+str(hote)+' '+str(tempp)+' '+str(hotp)+' '+str(tempp)+' '+str(hotp)+' '+'\n'
+Estring = str(t*dt*1e15)+' '+str(tempe)+' '+str(tempp)+' '+str(tempc)+' \n'
 
-file = open(pfad+'/Energymonitor'+str(radius)+'.txt','a')
+Hotstring =str(t*dt*1e15)+' '+str(hote)+' '+str(hotp)+' '+str(hotc)+' \n'
+
+UltHotstring =str(t*dt*1e15)+' '+str(uhote)+' '+str(uhotp)+' '+str(uhotc)+' \n'
+
+file = open(pfad+'/AvTempMonitor'+str(radius)+'.txt','a')
 file.write( Estring)
 file.close()
-file2 = open(pfad+'/Chargemonitor'+str(radius)+'.txt','a')
+file2 = open(pfad+'/ChargeMonitor'+str(radius)+'.txt','a')
 file2.write(Qstring)
+file2.close()
+file3 = open(pfad+'/FastpartMonitor'+str(radius)+'.txt','a')
+file3.write(Hotstring)
+file3.close()
+file4 = open(pfad+'/UltraFastMonitor'+str(radius)+'.txt','a')
+file4.write(UltHotstring)
+file4.close()
 
-print 'timestep',t,'successfull'
+print 'timestep',t,'successful'
