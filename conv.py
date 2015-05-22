@@ -29,7 +29,7 @@ def closest_approach(T): return e**2/k/T
 def thermal_vel(T,m): return math.sqrt(k*T/m)
 def skin_depth(w): return c/w
 def free_path(V,v): return V/v
-def sound_vel(T) : return math.sqrt(5/3*k*T/mp)
+def sound_vel(T) : return math.sqrt(5./3.*k*T/mp)
 
 def give_params(t,n):
     T=eV_to_kelvin(t)

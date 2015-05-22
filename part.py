@@ -18,6 +18,7 @@ class Data():
         self.angle= []
         self.ekin = []
         self.econe =[]
+        self.ecorcone =[]
         self.lineout=np.zeros(size[1])
         self.lineE=np.zeros(size[1])
         self.sorted = False
@@ -43,11 +44,12 @@ class Data():
         if (ang<10.) and (ang>-10.): self.econe+=[Ekin]
         return (ang,Ekin)
 
-    def r_cor(self,p,Ekin,R,center): # p = posx,posz,px,py,pz
+    def r_cor(self,p,ang,Ekin,R,center): # p = posx,posz,px,py,pz
     #Ekin = (np.sqrt(p[2]*p[2] + p[3]*p[3] + p[4]*p[4] +1) - 1)*self.m*c*c/e
         r=np.sqrt((p[0]-center[0])*(p[0]-center[0])+(p[1]-center[1])*(p[1]-center[1]))
         if r>R: fac=math.log(r/R)
         else : fac = 1.
+        if (ang<10.) and (ang>-10.): self.ecorcone+=[Ekin/fac]
         return (fac,Ekin/fac)
 
     def process(self,hot,R,center,size):

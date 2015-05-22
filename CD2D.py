@@ -49,6 +49,9 @@ gridsize_z = gdims_z/res
 center=(512,1024)
 size = [gdims_x+1,gdims_z+1]
 
+R=radius/dxphys
+print R
+
 zline=np.linspace(0,gdims_z,gdims_z+1)*dxphys*1e6
 #print size,zline,len(zline)
 
@@ -184,7 +187,7 @@ plt.xlim([0,64])
 plt.subplot(3,2,4)
 plt.plot(zline,electron.lineE/200.,color='blue',linewidth=0.1)
 plt.plot(zline,proton.lineE,color='red')
-plt.plot(zline,carbon.lineE,color='black')
+plt.plot(zline,np.divide(carbon.lineE,12.),color='black')
 plt.title("maximum energy")
 plt.xlabel("z")
 plt.ylabel("E")
@@ -203,7 +206,7 @@ plt.title("Energiespektrum (blue: in Cone)")
 plt.ylabel("n")
 
 
-plt.savefig('Images/CD2D/CD2D-'+str(t)+'r='+str(radius)+'.png')
+plt.savefig('Images/CD2D/CD2D-new-'+str(t)+'r='+str(radius)+'.png')
 #plt.show()
 
 C=carbon.process(1e6,(radius+3.)*1e-6/dxphys,center,size)
@@ -212,8 +215,9 @@ P=proton.process(1e6,(radius+3.)*1e-6/dxphys,center,size)
 
 print C,E,P
 
-Q=ppqp*(C[0]+P[0]-E[0])
-Qin=ppqp*(C[1]+P[1]-E[1])
+Q=ppqp*(C[0]+P[0]+E[0])
+Qe=E[0]
+Qin=ppqp*(C[1]+P[1]+E[1])
 
 tempc=C[2]
 tempp=P[2]
@@ -225,7 +229,7 @@ uhotc=C[4]
 uhotp=P[4]
 uhote=E[4]
 
-Qstring = str(t*dt*1e15)+' '+str(Q)+' '+str(Qin)+'\n'
+Qstring = str(t*dt*1e15)+' '+str(Q)+' '+str(Qin)+' '+str(Qe)+'\n'
 
 Estring = str(t*dt*1e15)+' '+str(tempe)+' '+str(tempp)+' '+str(tempc)+' \n'
 
@@ -233,16 +237,16 @@ Hotstring =str(t*dt*1e15)+' '+str(hote)+' '+str(hotp)+' '+str(hotc)+' \n'
 
 UltHotstring =str(t*dt*1e15)+' '+str(uhote)+' '+str(uhotp)+' '+str(uhotc)+' \n'
 
-file = open(pfad+'/AvTempMonitor'+str(radius)+'.txt','a')
+file = open(pfad+'/AvTempMon'+str(radius)+'.txt','a')
 file.write( Estring)
 file.close()
-file2 = open(pfad+'/ChargeMonitor'+str(radius)+'.txt','a')
+file2 = open(pfad+'/ChargeMon'+str(radius)+'.txt','a')
 file2.write(Qstring)
 file2.close()
-file3 = open(pfad+'/FastPartMonitor'+str(radius)+'.txt','a')
+file3 = open(pfad+'/FastPartMon'+str(radius)+'.txt','a')
 file3.write(Hotstring)
 file3.close()
-file4 = open(pfad+'/UltraFastMonitor'+str(radius)+'.txt','a')
+file4 = open(pfad+'/UltraFastMon'+str(radius)+'.txt','a')
 file4.write(UltHotstring)
 file4.close()
 

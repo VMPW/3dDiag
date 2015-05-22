@@ -7,7 +7,7 @@ import conv
 from getdata import *
 import part
 
-plt.rcParams['figure.figsize'] = 15, 10
+plt.rcParams['figure.figsize'] = 12, 10
 res = 1
 cutoffx = 0.2
 cutoffz = 0.2
@@ -41,7 +41,7 @@ print R
 
 zline=np.linspace(0,gdims_z,gdims_z+1)*dxphys*1e6
 histp=[0]
-histo=[0]
+#histo=[0]
 log=[0]
 
 start = timeit.default_timer()
@@ -70,9 +70,10 @@ for i in range(0,kindarr.size):
     p = [int(xarr[i]*(1/dx)),int(zarr[i]*(1/dx)),pxarr[i],pyarr[i],pzarr[i]]
     if (parttyp == 1):
         Ek=proton.sort(p,radius,center)
-        histo+=[Ek]
+        phas=proton.ang_sort(p,Ek)
+        #histo+=[Ek]
         #phase+=[proton.ang_sort(p,Ek)]
-        f=proton.r_cor(p,Ek,R,center)
+        f=proton.r_cor(p,phas[0],Ek,R,center)
         log+=[f[0]]
         histp+=[f[1]]
 
@@ -82,14 +83,40 @@ print np.average(histp),np.average(log),np.amax(log)
 
 #phase=zip(*phase)
 
-plt.hist(histp,bins=100,log=True,normed=False,alpha=0.6,color='red',facecolor='red')
-plt.hist(histo,bins= 100,log=True,normed=False,alpha=0.2,color='yellow',facecolor='red')
+plt.hist(histp,bins=50,log=True,normed=False,alpha=0.6,color='red',facecolor='red')
+plt.hist(proton.ekin,bins= 50,log=True,normed=False,alpha=0.2,color='yellow',facecolor='red')
 #plt.hist(proton.econe,bins= 50,log=True,normed=False,alpha=0.1,color='blue',facecolor='blue')
 #plt.text(6e7,0.5e4, 'total ion energy in cone: '+str(np.around(Etot/1e9,4))+'GeV\ntotal ion energy in box: '+str(np.around(sum(np.ravel(Ekinp)/1e9,4)))+'GeV\nelectron temperature:'+str(np.mean(Ekine))+'\nproton temperature:'+str(np.mean(Ekinp))+'\ncarbon temperature:'+str(np.mean(Ekinc)))
 plt.xlim([0,1e8])
 plt.ylim([0,1.5e4])
 plt.xlabel("E")
+plt.title("Energiespektrum (comparison)")
+plt.ylabel("n")
+plt.savefig('Images/Spectra/spectrum-comp'+str(t)+'r='+str(radius)+'.png')
+plt.show()
+
+#plt.hist(histp,bins=100,log=True,normed=False,alpha=0.6,color='red',facecolor='red')
+#plt.hist(histo,bins= 100,log=True,normed=False,alpha=0.2,color='yellow',facecolor='red')
+plt.hist(proton.ekin,bins= 50,log=True,normed=False,alpha=0.1,color='blue',facecolor='blue')
+plt.hist(proton.econe,bins= 50,log=True,normed=False,alpha=0.4,color='blue',facecolor='blue')
+#plt.text(6e7,0.5e4, 'total ion energy in cone: '+str(np.around(Etot/1e9,4))+'GeV\ntotal ion energy in box: '+str(np.around(sum(np.ravel(Ekinp)/1e9,4)))+'GeV\nelectron temperature:'+str(np.mean(Ekine))+'\nproton temperature:'+str(np.mean(Ekinp))+'\ncarbon temperature:'+str(np.mean(Ekinc)))
+plt.xlim([0,1e8])
+plt.ylim([0,1.5e4])
+plt.xlabel("E")
+plt.title("Energiespektrum (original)")
+plt.ylabel("n")
+plt.savefig('Images/Spectra/spectrum-norm-'+str(t)+'r='+str(radius)+'.png')
+plt.show()
+
+plt.hist(histp,bins=50,log=True,normed=False,alpha=0.6,color='red',facecolor='red')
+#plt.hist(histo,bins= 100,log=True,normed=False,alpha=0.2,color='yellow',facecolor='red')
+#plt.hist(proton.ekin,bins= 50,log=True,normed=False,alpha=0.1,color='blue',facecolor='blue')
+plt.hist(proton.ecorcone,bins= 50,log=True,normed=False,alpha=0.2,color='blue',facecolor='blue')
+#plt.text(6e7,0.5e4, 'total ion energy in cone: '+str(np.around(Etot/1e9,4))+'GeV\ntotal ion energy in box: '+str(np.around(sum(np.ravel(Ekinp)/1e9,4)))+'GeV\nelectron temperature:'+str(np.mean(Ekine))+'\nproton temperature:'+str(np.mean(Ekinp))+'\ncarbon temperature:'+str(np.mean(Ekinc)))
+plt.xlim([0,0.3e8])
+plt.ylim([0,1e4])
+plt.xlabel("E")
 plt.title("Energiespektrum (corrected)")
 plt.ylabel("n")
-plt.savefig('Images/Spectra/spectrum-'+str(t)+'r='+str(radius)+'.png')
+plt.savefig('Images/Spectra/spectrum-cor-'+str(t)+'r='+str(radius)+'.png')
 plt.show()
