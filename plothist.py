@@ -1,6 +1,5 @@
-from const import *
+import conv
 from getdata import *
-from process import *
 import matplotlib.pyplot as plt
 import sys
 import os
@@ -22,27 +21,46 @@ n=0
 electrons = get_hist(t,n,0,pfad)
 protons = get_hist(t,n,1,pfad)
 carbons = get_hist(t,n,2,pfad)
-
+print electrons.shape
 ne=electrons.sum(axis=0)
-np=protons.sum(axis=0)
+ni=protons.sum(axis=0)
 nc=carbons.sum(axis=0)
-
-
+print ne.shape
+ee=electrons.sum(axis=1).sum(axis=1)
+print ee.shape
+plt.rcParams['figure.figsize'] = 15, 10
 
 #plt.suptitle('electrons \n   Qges= '+str(np.around(Qtot,3))+'e \n pulse maximum hits target in ' + str(52-(t*dt*1e15)) +'fs')
 plt.subplot(2,2,1)
 plt.imshow(ne)
 plt.xlabel('z')
 plt.ylabel('y')
-plt.colorbar(orientation=u'horizontal')
-plt.title('charge distribution')
+plt.title('density distribution electrons')
+
 #plt.savefig('Images/'+namestr+'charge'+str(t)+'.png')
 
 
 plt.subplot(2,2,2)
-plt.imshow(np)
+plt.imshow(ni)
 plt.xlabel('x')
 plt.ylabel('y')
+plt.title('density distribution protons')
+#plt.savefig(namestr+'detec'+str(t)+'.png')
+
+#plt.suptitle('electrons \n   Qges= '+str(np.around(Qtot,3))+'e \n pulse maximum hits target in ' + str(52-(t*dt*1e15)) +'fs')
+plt.subplot(2,2,3)
+plt.hist(np.array(electrons.sum(axis=1).sum(axis=1)))
+plt.xlabel('e')
+plt.ylabel('n')
+plt.title('energy distribution electrons')
+#plt.savefig('Images/'+namestr+'charge'+str(t)+'.png')
+
+
+plt.subplot(2,2,4)
+plt.hist(np.array(protons.sum(axis=1).sum(axis=1)))
+plt.xlabel('e')
+plt.ylabel('n')
+plt.title('energy distribution protons')
 #plt.savefig(namestr+'detec'+str(t)+'.png')
 
 plt.show()

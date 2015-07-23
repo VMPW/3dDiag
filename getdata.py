@@ -87,8 +87,9 @@ def get_hist(t,n,kind,pfad):
         f = h5py.File(pfad+'/'+name)
         arr = [0.]
         try:
-            g = f[u'mrc_fld_63'][u'fld']
-            return g[:,:,:,kind]
+		for key in f:
+			if 'fld' in key: g = f[key][u'fld']
+            	return g[:,:,:,kind]
         except: print name,' exists but could not be loaded (kind must be 0,1 or 2)'
     except: print "failed loading hist data t= "+str(t)
 
