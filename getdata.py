@@ -10,7 +10,7 @@ def load_params(par):
         print 'opened '+par
         params = p.read()
         params = params.split()
-        
+        print params
         radius = int(params[0])
         gdims_x = int(params[1])
         gdims_y = int(params[2])
@@ -26,6 +26,7 @@ def load_params(par):
             p.close()
             return [radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch]
         p.close()
+        print[radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch,dphys]
         return [radius,gdims_x,gdims_y,gdims_z,dt,dx,npatch,dphys]
     except:
         print "parameter file invalid"
@@ -78,9 +79,21 @@ def get_arr(t,n,typ,pfad):
             return arr
         except: print "failed loading particle data t= "+str(t)
 
+def get_hist(t,n,kind,pfad):
+    try:
+        print pfad, t, n , kind
+        name = 'hist.t' + str(t).zfill(6) + '_n00' + str(n).zfill(4) + '.h5'
+        print 'loading kind '+str(kind)+' from '+pfad+'/'+name
+        f = h5py.File(pfad+'/'+name)
+        arr = [0.]
+        try:
+            g = f[u'mrc_fld_63'][u'fld']
+            return g[:,:,:,kind]
+        except: print name,' exists but could not be loaded (kind must be 0,1 or 2)'
+    except: print "failed loading hist data t= "+str(t)
 
 def get_ex(t,n,pfad):
-    "extracts e-field x-component at time t from node n, patch p from pfd-h5 file"
+    "extracts e-field x-component at time t from node n, from pfd-h5 file"
     name = 'pfd.t0' + str(t).zfill(5) + '_n00' + str(n).zfill(4) + '.h5'
     #print 'loading '+pfad+'/'+name
     f = h5py.File(pfad+'/'+name)
@@ -89,7 +102,7 @@ def get_ex(t,n,pfad):
         g = f[key]
         #   print g.keys()
         if 'ex' in g:
-            mat = np.array(g['ex/p'+str(p)+'/3d'])
+            mat = np.array(g['ex/p'+str(n)+'/3d'])
     return mat.reshape(mat.shape[0],mat.shape[2])
 
 def get_ez(t,n,p,pfad):
@@ -102,7 +115,7 @@ def get_ez(t,n,p,pfad):
         g = f[key]
         #   print g.keys()
         if 'ez' in g:
-            mat = np.array(g['ez/p'+str(p)+'/3d'])
+            mat = np.array(g['ez/p'+str(n)+'/3d'])
     return mat.reshape(mat.shape[0],mat.shape[2])
 
 
