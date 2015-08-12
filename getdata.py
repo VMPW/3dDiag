@@ -11,7 +11,7 @@ def load_params(par):
         params = p.read()
         params = params.split()
         print params
-        radius = int(params[0])
+        radius = float(params[0])
         gdims_x = int(params[1])
         gdims_y = int(params[2])
         gdims_z = int(params[3])
@@ -57,6 +57,31 @@ def load_params2d(par):
     except:
         print "parameter file invalid"
 
+
+def get_compact(t,n,typ,pfad):
+        "loads array from particles-h5 file"
+        try:
+            name = 'particles.n0' + str(n).zfill(5) + '.h5'
+            #print 'loading '+typ+' from '+pfad+'/'+name
+            typtime = typ+'.'+str(t).zfill(6)
+            #print "loading ",typtime
+            f = h5py.File(pfad+'/'+name)
+            arr = []
+            for key in f:
+                for i in range(0,len(typtime)):
+                    #print key[i],typtime[i]
+                    if (key[i]==typtime[i]):
+                        valid = True
+                        #print "true"
+                    else:
+                        valid = False
+                        break
+                if valid:
+                    #print key,"=",typtime, f[key].size
+                    arr = np.concatenate((arr,np.array(f[key])))
+                    #print arr
+            return arr
+        except: print "failed loading particle data n= "+str(n)
 
 def get_arr(t,n,typ,pfad):
         "loads array from particles-h5 file"
