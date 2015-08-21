@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from const import *
+from conv import *
 
 def get_en(px,py,pz,m):
     global c
@@ -22,15 +22,16 @@ def get_angle(px,py,pz):
 def get_anglexy(pxy,pz):
     return math.atan(pxy/pz)*180/math.pi
 
+
 def get_slice(typ,arr,gdims,gdimsz,dx,up,low):
-    slice = np.zeros((gdims+10,gdimsz+10))
+    slice = np.zeros((gdims,gdimsz))
     for i in range(0,arr.shape[1]):
         if (arr[not typ,i]<up and arr[not typ,i]>low) :
             slice[arr[typ,i]/dx,arr[2,i]/dx]+=1
     return slice
 
 def get_slice_energy(typ,arr,gdims,gdimsz,dx,up,low):
-    slice = np.zeros((gdims+10,gdimsz+10))
+    slice = np.zeros((gdims,gdimsz))
     for i in range(0,arr.shape[1]):
         if arr[6,i] > 1000:
             if (arr[not typ,i]<up and arr[not typ,i]>low) :
@@ -39,7 +40,7 @@ def get_slice_energy(typ,arr,gdims,gdimsz,dx,up,low):
     return slice
 
 def get_slice_max(typ,arr,gdims,gdimsz,dx,up,low):
-    slice = np.zeros((gdims+10,gdimsz+10))
+    slice = np.zeros((gdims,gdimsz))
     for i in range(0,arr.shape[1]):
         if (arr[not typ,i]<up and arr[not typ,i]>low) :
             if arr[6,i] > slice[arr[typ,i]/dx,arr[2,i]/dx]:
@@ -64,5 +65,5 @@ def get_detec(arr,m):
             #print ang
             if (math.fabs(ang))<20. and detec[int(get_anglexy(arr[3,i],arr[5,i]))+20,int(get_anglexy(arr[4,i],arr[5,i]))+20]<arr[6,i]:
                 detec[int(get_anglexy(arr[3,i],arr[5,i]))+20,int(get_anglexy(arr[4,i],arr[5,i]))+20]=arr[6,i]
-    print detec
+    #print detec
     return detec

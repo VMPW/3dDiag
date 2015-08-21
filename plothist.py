@@ -32,18 +32,18 @@ plt.rcParams['figure.figsize'] = 15, 10
 
 #plt.suptitle('electrons \n   Qges= '+str(np.around(Qtot,3))+'e \n pulse maximum hits target in ' + str(52-(t*dt*1e15)) +'fs')
 plt.subplot(2,2,1)
-plt.imshow(ne)
-plt.xlabel('z')
-plt.ylabel('y')
+plt.imshow(ne,interpolation='none')
+plt.xlabel('x')
+plt.ylabel('z')
 plt.title('density distribution electrons')
 
 #plt.savefig('Images/'+namestr+'charge'+str(t)+'.png')
 
 
 plt.subplot(2,2,2)
-plt.imshow(ni)
+plt.imshow(ni,interpolation='none')
 plt.xlabel('x')
-plt.ylabel('y')
+plt.ylabel('z')
 plt.title('density distribution protons')
 #plt.savefig(namestr+'detec'+str(t)+'.png')
 

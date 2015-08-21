@@ -73,7 +73,7 @@ for i in range(0,kindarr.size):
         phas=proton.ang_sort(p,Ek)
         #histo+=[Ek]
         #phase+=[proton.ang_sort(p,Ek)]
-        f=proton.r_cor(p,phas[0],Ek,R,center)
+        f=proton.r_cor(p,phas[0],Ek,(R+32.),center)
         log+=[f[0]]
         histp+=[f[1]]
 
@@ -92,7 +92,7 @@ plt.ylim([0,1.5e4])
 plt.xlabel("E")
 plt.title("Energiespektrum (comparison)")
 plt.ylabel("n")
-plt.savefig('Images/Spectra/spectrum-comp'+str(t)+'r='+str(radius)+'.png')
+plt.savefig('Images/Spectra/s-spectrum-comp-R+0.5-'+str(t)+'r='+str(radius)+'.png')
 plt.show()
 
 #plt.hist(histp,bins=100,log=True,normed=False,alpha=0.6,color='red',facecolor='red')
@@ -105,7 +105,7 @@ plt.ylim([0,1.5e4])
 plt.xlabel("E")
 plt.title("Energiespektrum (original)")
 plt.ylabel("n")
-plt.savefig('Images/Spectra/spectrum-norm-'+str(t)+'r='+str(radius)+'.png')
+plt.savefig('Images/Spectra/s-spectrum-norm-R+0.5--'+str(t)+'r='+str(radius)+'.png')
 plt.show()
 
 plt.hist(histp,bins=50,log=True,normed=False,alpha=0.6,color='red',facecolor='red')
@@ -118,5 +118,5 @@ plt.ylim([0,1e4])
 plt.xlabel("E")
 plt.title("Energiespektrum (corrected)")
 plt.ylabel("n")
-plt.savefig('Images/Spectra/spectrum-cor-'+str(t)+'r='+str(radius)+'.png')
+plt.savefig('Images/Spectra/s-spectrum-cor-R+0.5--'+str(t)+'r='+str(radius)+'.png')
 plt.show()

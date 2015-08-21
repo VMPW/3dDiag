@@ -1,5 +1,5 @@
-from mpl_toolkits.mplot3d import Axes3D
-from const import *
+import mpl_toolkits
+from conv import *
 from getdata import *
 from process import *
 import matplotlib.pyplot as plt
@@ -8,6 +8,9 @@ import os
 import numpy as np
 import timeit
 
+reload(mpl_toolkits)
+print mpl_toolkits.__path__
+from mpl_toolkits.mplot3d import Axes3D
 
 plt.rcParams['figure.figsize'] = 15, 10
 cx = [0.,0.]
@@ -164,14 +167,14 @@ elif(format == 'a'):
             #print proton
             proton[6]+=[get_en(arr[3,i],arr[4,i],arr[5,i],mp)]
         #print proton
-        elif arr[6,i]==-1:
-            electron[0]+=[arr[0,i]]
-            electron[1]+=[arr[1,i]]
-            electron[2]+=[arr[2,i]]
-            electron[3]+=[arr[3,i]]
-            electron[4]+=[arr[4,i]]
-            electron[5]+=[arr[5,i]]
-            electron[6]+=[get_en(arr[3,i],arr[4,i],arr[5,i],me)]
+        #elif arr[6,i]==-1:
+        #   electron[0]+=[arr[0,i]]
+        #   electron[1]+=[arr[1,i]]
+        #    electron[2]+=[arr[2,i]]
+        #       electron[3]+=[arr[3,i]]
+        #    electron[4]+=[arr[4,i]]
+        #    electron[5]+=[arr[5,i]]
+        #    electron[6]+=[get_en(arr[3,i],arr[4,i],arr[5,i],me)]
         elif int(arr[6,i])==1836:
             carbon[0]+=[arr[0,i]]
             carbon[1]+=[arr[1,i]]
@@ -179,7 +182,7 @@ elif(format == 'a'):
             carbon[3]+=[arr[3,i]]
             carbon[4]+=[arr[4,i]]
             carbon[5]+=[arr[5,i]]
-            carbon[6]+=[get_en(arr[3,i],arr[4,i],arr[5,i],mp*1836)]
+            carbon[6]+=[get_en(arr[3,i],arr[4,i],arr[5,i],mp)]
 
 
 
@@ -196,22 +199,30 @@ def fil1(arr,i,limx,limz):
      if (arr[0][i]<limx) and (arr[2][i]>limz): return False
      else: return True
 
+def fil2(arr,i,limx,limz):
+    if (arr[1][i]>limz) and (arr[1][i]<limx): return False
+    else: return True
+
 newel=[[],[],[]]
 newpro=[[],[],[]]
-"""for i in range(0,carbon.shape[1]):
-    if fil(carbon,i,75.,75.):
+newcar=[[],[],[]]
+
+for i in range(0,carbon.shape[1]):
+    if fil1(carbon,i,75.,66.):
         newcar[0]+=[carbon[0][i]]
         newcar[1]+=[carbon[1][i]]
         newcar[2]+=[carbon[2][i]]
-"""
-for i in range(0,electron.shape[1]):
-     if fil1(electron,i,75.,75.):
+
+
+"""for i in range(0,electron.shape[1]):
+     if fil1(electron,i,75.4,66.):
          newel[0]+=[electron[0][i]]
          newel[1]+=[electron[1][i]]
          newel[2]+=[electron[2][i]]
+"""
 
 for i in range(0,proton.shape[1]):
-     if fil1(proton,i,75.,75.):
+     if fil1(proton,i,75.4,66.):
          newpro[0]+=[proton[0][i]]
          newpro[1]+=[proton[1][i]]
          newpro[2]+=[proton[2][i]]
@@ -222,16 +233,24 @@ print 'cutting time:',stop - start
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-ax.scatter(newel[0],newel[1],newel[2],alpha=0.001)
-plt.savefig('newel.png')
+#ax.scatter(electron[2],electron[1],electron[0],alpha=0.005,color='blue')
+#plt.savefig('newel.png')
+#plt.hold(True)
+ax.scatter(newpro[2],newpro[0],newpro[1],color='red',alpha=0.05)
+#plt.savefig('newpro.png')
 plt.hold(True)
-ax.scatter(newpro[0],newpro[1],newpro[2],alpha=0.01)
-plt.savefig('newpro.png')
-plt.hold(True)
-ax.scatter(carbon[0],carbon[1],carbon[2],alpha=0.01)
+ax.scatter(newcar[2],newcar[0],newcar[1], color='yellow',alpha=0.05)
+#plt.hold(True)
+#ax.scatter(carbon[2],carbon[1],carbon[0],alpha=0.005, color='green')
+#ax.plot(np.linspace(0,150,10),10*[70.])
+#plt.hold(True)
+#ax.plot(np.linspace(0,10,10),np.linspace(30,110,10),color='green')
 
+ax.set_xlim([20,120])
+ax.set_ylim([20,120])
+ax.set_zlim([20,120])
 ax.set_xlabel('Z')
-ax.set_ylabel('Y')
-ax.set_zlabel('X')
-plt.savefig('all.png')
+ax.set_ylabel('X')
+ax.set_zlabel('Y')
+plt.savefig('Images/'+namestr+'-'+str(t)+'3d-protonandcarbon.png')
 plt.show()
