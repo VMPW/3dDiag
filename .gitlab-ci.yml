@@ -1,0 +1,28 @@
+stages:
+    - build
+    - test
+
+build:
+    stage: build
+    script:
+        - echo "now building"
+        - mkdir build
+        - docker --version
+        - echo $CI_REGISTRY $CI_REGISTRY_IMAGE $CI_REGISTRY_USER
+        - uname -n
+        - cat /etc/os-release
+        - ls
+        - pwd
+
+
+    artifacts:
+        paths:
+            - build/
+test:
+    stage: test
+    script: 
+    - echo "echo testing"
+    - pwd
+    - ls
+    - apk add python3
+    - python3 --version
